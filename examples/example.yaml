@@ -1,0 +1,33 @@
+# chart name or path where chart is located
+chart: "stable/whatever"
+
+# value files common across all environments
+valueFiles:
+  - values.yaml
+
+environments:
+  - name: dev
+    namespace: dev-platform
+    tillerNamespace: dev-platform
+    vars:
+      - env/dev-vars.yaml
+    valueFiles:
+      - env/dev-values.yaml
+      - env/dev-values.tmpl
+    selector:
+      - type: branch
+        pattern: "deploy/dev"
+
+  - name: preview
+    namespace: dev-platform
+    tillerNamespace: dev-platform
+    preview: true
+    vars:
+      - type: file
+        source: env/dev-vars.yaml
+    valueFiles:
+      - env/dev-values.yaml
+      - env/dev-values.tmpl
+    selector:
+      - type: branch
+        pattern: "feature/(.+)"
